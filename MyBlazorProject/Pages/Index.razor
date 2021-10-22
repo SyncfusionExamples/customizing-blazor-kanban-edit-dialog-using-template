@@ -1,0 +1,109 @@
+﻿@page "/"
+
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+<div style="padding:10px">
+    <button class="e-btn" @onclick="@ShowAddCardDialog">Add new card</button>
+</div>
+<SfKanban @ref="KanbanRef" KeyField="Status" DataSource="@Tasks">
+    <KanbanColumns>
+        @foreach (ColumnModel item in columnData)
+        {
+            <KanbanColumn HeaderText="@item.HeaderText" KeyField="@item.KeyField"></KanbanColumn>
+        }
+    </KanbanColumns>
+    <KanbanCardSettings ContentField="Summary" HeaderField="Id"></KanbanCardSettings>
+    <KanbanDialogSettings>
+        <Template>
+            @{
+                KanbanDataModel taskDetails = (KanbanDataModel)context;
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="e-label">ID</td>
+                            <td>
+                                <SfTextBox CssClass="e-field"
+                                           Value="@taskDetails.Id"
+                                           Enabled="false">
+                                </SfTextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-label">Status</td>
+                            <td>
+                                <SfDropDownList CssClass="e-field"
+                                                TItem="KanbanDataModel"
+                                                TValue="string"
+                                                DataSource="@ProgressDetails"
+                                                @bind-Value="@taskDetails.Status">
+                                    <DropDownListFieldSettings Text="Status"
+                                                               Value="Status">
+                                    </DropDownListFieldSettings>
+                                </SfDropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-label">Assignee</td>
+                            <td>
+                                <SfDropDownList CssClass="e-field"
+                                                TItem="KanbanDataModel"
+                                                TValue="string"
+                                                DataSource="@ProgressDetails"
+                                                @bind-Value="@taskDetails.Assignee">
+                                    <DropDownListFieldSettings Text="Assignee"
+                                                               Value="Assignee">
+                                    </DropDownListFieldSettings>
+                                </SfDropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-label">Priority</td>
+                            <td>
+                                <SfDropDownList CssClass="e-field"
+                                                TItem="KanbanDataModel"
+                                                TValue="string"
+                                                DataSource="@ProgressDetails"
+                                                @bind-Value="@taskDetails.Priority">
+                                    <DropDownListFieldSettings Text="Priority"
+                                                               Value="Priority">
+                                    </DropDownListFieldSettings>
+                                </SfDropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-label">Summary</td>
+                            <td>
+                                <SfTextBox Multiline="true"
+                                           CssClass="e-field"
+                                           @bind-Value="@taskDetails.Summary">
+                                </SfTextBox>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </Template>
+    </KanbanDialogSettings>
+</SfKanban>
+
+@code{
+    SfKanban<KanbanDataModel> KanbanRef;
+    private List<KanbanDataModel> Tasks = new KanbanDataModel().GetTasks();
+    private List<KanbanDataModel> ProgressDetails = new KanbanDataModel().GetTaskProgress();
+    private List<ColumnModel> columnData = new List<ColumnModel>()
+{
+        new ColumnModel(){ HeaderText= "To Do", KeyField= new List<string>() {"Open" } },
+        new ColumnModel(){ HeaderText= "In Progress", KeyField= new List<string>() {"InProgress" } },
+        new ColumnModel(){ HeaderText= "Testing", KeyField= new List<string>() {"Testing" } },
+        new ColumnModel(){ HeaderText= "Done", KeyField= new List<string>() {"Close" } }
+    };
+
+    private async void ShowAddCardDialog()
+    {
+        KanbanDataModel data = new KanbanDataModel()
+        {
+            Id = (this.Tasks.Count() + 1).ToString()
+        };
+        await this.KanbanRef.OpenDialog(CurrentAction.Add, data);
+    }
+}
