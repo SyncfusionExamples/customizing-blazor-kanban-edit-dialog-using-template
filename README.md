@@ -17,8 +17,7 @@ This sample shows how to replace the default edit dialog with a custom template 
 ### Prerequisites
 
 * [.NET SDK 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) or later
-* [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or later
-* [Visual Studio Code](https://code.visualstudio.com/)
+* Visual Studio 2026 or [Visual Studio Code](https://code.visualstudio.com/)
 
 ### Clone the repository
 
